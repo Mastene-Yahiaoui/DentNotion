@@ -114,22 +114,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             StatCard(
                               title: 'Total Patients',
                               value: _totalPatients.toString(),
-                              icon: '👥',
                             ),
                             StatCard(
                               title: "Today's Appointments",
                               value: _todayAppointments.toString(),
-                              icon: '📅',
                             ),
                             StatCard(
                               title: 'Total Revenue',
                               value: '\$${_totalRevenue.toStringAsFixed(2)}',
-                              icon: '💰',
                             ),
                             StatCard(
                               title: 'Unpaid Invoices',
                               value: _unpaidInvoices.toString(),
-                              icon: '📄',
                             ),
                           ],
                         ),

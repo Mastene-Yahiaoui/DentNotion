@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class StatCard extends StatelessWidget {
   final String title;
   final String value;
-  final String icon;
 
   const StatCard({
     Key? key,
     required this.title,
     required this.value,
-    required this.icon,
   }) : super(key: key);
 
   @override
@@ -32,9 +30,11 @@ class StatCard extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 20,
                           color: Colors.grey,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -43,13 +43,11 @@ class StatCard extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ),
-                Text(
-                  icon,
-                  style: const TextStyle(fontSize: 32),
                 ),
               ],
             ),
