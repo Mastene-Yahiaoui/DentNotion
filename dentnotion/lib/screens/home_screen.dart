@@ -6,6 +6,7 @@ import 'appointments_screen.dart';
 import 'treatments_screen.dart';
 import 'invoices_screen.dart';
 import 'inventory_screen.dart';
+import '../widgets/bottom_navbar.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -30,6 +31,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavbar(
+        selectedIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
       drawer: Drawer(
         child: Container(
           color: const Color(0xFF1F2937),
