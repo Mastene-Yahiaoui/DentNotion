@@ -1,14 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'screens/patients_screen.dart';
-import 'screens/appointments_screen.dart';
-import 'screens/treatments_screen.dart';
-import 'screens/invoices_screen.dart';
-import 'screens/inventory_screen.dart';
-import 'services/api_service.dart';
-import 'models/appointment.dart';
-import 'widgets/stat_card.dart';
-import 'widgets/appointments_table.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(const DentFlowApp());
