@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/inventory_item.dart';
 import '../widgets/status_badge.dart';
+import '../theme.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);
@@ -45,6 +46,34 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
+  void _showAddDialog() {
+    print('Showing add inventory dialog');
+    showDialog(
+      context: context,
+      builder: (context) => AddInventoryDialog(
+        onSubmit: _createInventoryItem,
+      ),
+    );
+  }
+
+  Future<void> _createInventoryItem(Map<String, dynamic> data) async {
+    try {
+      await _api.createInventoryItem(data);
+      _fetchInventory();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Inventory item created successfully')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
   List<InventoryItem> get _filteredInventory {
     if (_searchTerm.isEmpty) return _inventory;
     return _inventory
@@ -71,7 +100,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.cardBackground,
               ),
               onChanged: (value) {
                 setState(() => _searchTerm = value);
@@ -103,9 +132,126 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _showAddDialog,
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class AddInventoryDialog extends StatefulWidget {
+  final Function(Map<String, dynamic>) onSubmit;
+
+  const AddInventoryDialog({
+    Key? key,
+    required this.onSubmit,
+  }) : super(key: key);
+
+  @override
+  State<AddInventoryDialog> createState() => _AddInventoryDialogState();
+}
+
+class _AddInventoryDialogState extends State<AddInventoryDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _itemController = TextEditingController();
+  final _quantityController = TextEditingController();
+  String _status = 'In Stock';
+  bool _submitting = false;
+
+  @override
+  void dispose() {
+    _itemController.dispose();
+    _quantityController.dispose();
+    super.dispose();
+  }
+
+  void _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() => _submitting = true);
+
+    final data = {
+      'item': _itemController.text,
+      'quantity': int.tryParse(_quantityController.text) ?? 0,
+      'status': _status,
+    };
+
+    await widget.onSubmit(data);
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add New Inventory Item'),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _itemController,
+                decoration: const InputDecoration(
+                  labelText: 'Item Name *',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) =>
+                    value?.isEmpty ?? true ? 'Please enter item name' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _quantityController,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity *',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) return 'Please enter quantity';
+                  if (int.tryParse(value!) == null) return 'Please enter a valid number';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: _status,
+                decoration: const InputDecoration(
+                  labelText: 'Status *',
+                  border: OutlineInputBorder(),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'In Stock', child: Text('In Stock')),
+                  DropdownMenuItem(value: 'Low Stock', child: Text('Low Stock')),
+                  DropdownMenuItem(value: 'Out of Stock', child: Text('Out of Stock')),
+                ],
+                onChanged: (value) => setState(() => _status = value!),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _submitting ? null : () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submitting ? null : _submit,
+          child: _submitting
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Create'),
+        ),
+      ],
     );
   }
 }

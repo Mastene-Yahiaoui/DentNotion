@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import '../models/appointment.dart';
+import '../theme.dart';
 
 class AppointmentsTable extends StatelessWidget {
   final List<Appointment> appointments;
+  final Function(Appointment)? onRowSelected;
 
-  const AppointmentsTable({Key? key, required this.appointments})
+  const AppointmentsTable({Key? key, required this.appointments, this.onRowSelected})
       : super(key: key);
 
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Confirmed':
-        return Colors.green;
+        return AppColors.statusConfirmed;
       case 'Pending':
-        return Colors.orange;
+        return AppColors.statusPending;
       case 'Completed':
-        return Colors.blue;
+        return AppColors.statusCompleted;
       case 'Cancelled':
-        return Colors.red;
+        return AppColors.statusCancelled;
       default:
-        return Colors.grey;
+        return AppColors.textSecondary;
     }
   }
 
@@ -37,6 +39,13 @@ class AppointmentsTable extends StatelessWidget {
         rows: appointments
             .map(
               (apt) => DataRow(
+                onSelectChanged: onRowSelected != null
+                    ? (selected) {
+                        if (selected == true) {
+                          onRowSelected!(apt);
+                        }
+                      }
+                    : null,
                 cells: [
                   DataCell(Text(apt.patientName)),
                   DataCell(Text(apt.date)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme.dart';
 
 class StatusBadge extends StatelessWidget {
   final String status;
@@ -21,16 +22,16 @@ class StatusBadge extends StatelessWidget {
       case 'confirmed':
       case 'completed':
       case 'in stock':
-        return Colors.green;
+        return AppColors.statusPaid;
       case 'pending':
       case 'low stock':
-        return Colors.orange;
+        return AppColors.statusPending;
       case 'unpaid':
       case 'cancelled':
       case 'out of stock':
-        return Colors.red;
+        return AppColors.statusCancelled;
       default:
-        return Colors.grey;
+        return AppColors.textSecondary;
     }
   }
 

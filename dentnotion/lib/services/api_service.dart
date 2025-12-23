@@ -59,4 +59,28 @@ class ApiService {
     await Future.delayed(const Duration(milliseconds: 300));
     return;
   }
+
+  Future<void> createPatient(Map<String, dynamic> payload) async {
+    // Simulate create delay; replace with POST to backend when ready
+    await Future.delayed(const Duration(milliseconds: 300));
+    return;
+  }
+
+  Future<void> createTreatment(Map<String, dynamic> payload) async {
+    // Simulate create delay; replace with POST to backend when ready
+    await Future.delayed(const Duration(milliseconds: 300));
+    return;
+  }
+
+  Future<void> createInventoryItem(Map<String, dynamic> payload) async {
+    // Simulate create delay; replace with POST to backend when ready
+    await Future.delayed(const Duration(milliseconds: 300));
+    return;
+  }
+
+  Future<void> createInvoice(Map<String, dynamic> payload) async {
+    // Simulate create delay; replace with POST to backend when ready
+    await Future.delayed(const Duration(milliseconds: 300));
+    return;
+  }
 }

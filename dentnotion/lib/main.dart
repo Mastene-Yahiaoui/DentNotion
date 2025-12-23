@@ -9,6 +9,7 @@ import 'services/api_service.dart';
 import 'models/appointment.dart';
 import 'widgets/stat_card.dart';
 import 'widgets/appointments_table.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const DentFlowApp());
@@ -22,15 +23,7 @@ class DentFlowApp extends StatelessWidget {
     return MaterialApp(
       title: 'DentFlow',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
-        ),
-      ),
+      theme: AppTheme.theme,
       home: const MainScreen(),
     );
   }
@@ -46,8 +39,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const DashboardScreen(),
+  List<Widget> get _screens => [
+    DashboardScreen(onNavigateToAppointments: () => setState(() => _selectedIndex = 2)),
     const PatientsScreen(),
     const AppointmentsScreen(),
     const TreatmentsScreen(),
@@ -61,12 +54,12 @@ class _MainScreenState extends State<MainScreen> {
       body: _screens[_selectedIndex],
       drawer: Drawer(
         child: Container(
-          color: const Color(0xFF1F2937),
+          color: AppColors.drawerBackground,
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.all(24),
-                color: const Color(0xFF111827),
+                color: AppColors.drawerHeaderBackground,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
@@ -74,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
                     Text(
                       '🦷 DentFlow',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textDrawer,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -83,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
                     Text(
                       'Dental Clinic Management',
                       style: TextStyle(
-                        color: Color(0xFF9CA3AF),
+                        color: AppColors.textDrawerSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -107,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                 padding: const EdgeInsets.all(24),
                 decoration: const BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Color(0xFF374151)),
+                    top: BorderSide(color: AppColors.borderLight),
                   ),
                 ),
                 child: Column(
@@ -116,14 +109,14 @@ class _MainScreenState extends State<MainScreen> {
                     Text(
                       '© 2025 DentFlow',
                       style: TextStyle(
-                        color: Color(0xFF9CA3AF),
+                        color: AppColors.textDrawerSecondary,
                         fontSize: 10,
                       ),
                     ),
                     Text(
                       'v1.0.0',
                       style: TextStyle(
-                        color: Color(0xFF6B7280),
+                        color: AppColors.textSecondary,
                         fontSize: 10,
                       ),
                     ),
@@ -149,17 +142,17 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF111827) : Colors.transparent,
+          color: isSelected ? AppColors.drawerHeaderBackground : Colors.transparent,
           border: isSelected
               ? const Border(
-                  right: BorderSide(color: Colors.blue, width: 4),
+                  right: BorderSide(color: AppColors.primary, width: 4),
                 )
               : null,
         ),
         child: Text(
           title,
           style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFF9CA3AF),
+            color: isSelected ? AppColors.textDrawer : AppColors.textDrawerSecondary,
             fontSize: 16,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
@@ -172,7 +165,9 @@ class _MainScreenState extends State<MainScreen> {
 // Dashboard implementation (in-file)
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final VoidCallback? onNavigateToAppointments;
+
+  const DashboardScreen({Key? key, this.onNavigateToAppointments}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -322,6 +317,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       )
                                     : AppointmentsTable(
                                         appointments: _recentAppointments,
+                                        onRowSelected: (appointment) {
+                                          widget.onNavigateToAppointments?.call();
+                                        },
                                       ),
                               ],
                             ),
