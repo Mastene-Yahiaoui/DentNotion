@@ -6,6 +6,7 @@ import 'appointments_screen.dart';
 import 'treatments_screen.dart';
 import 'invoices_screen.dart';
 import 'inventory_screen.dart';
+import 'setting_screen.dart';
 import '../widgets/bottom_navbar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -41,6 +42,16 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 1,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavbar(
