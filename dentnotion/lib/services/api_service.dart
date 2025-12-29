@@ -1,6 +1,16 @@
 import 'dart:async';
 
 class ApiService {
+  // Mock login method
+  Future<bool> login(String email, String password) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    // Mock credentials
+    if (email == 'admin@dentnotion.com' && password == 'password') {
+      return true;
+    }
+    return false;
+  }
+
   // Mock/dummy data for development — replace with real HTTP calls later
   Future<Map<String, dynamic>> getPatients() async {
     await Future.delayed(const Duration(milliseconds: 300));
